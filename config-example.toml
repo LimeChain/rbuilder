@@ -1,0 +1,35 @@
+log_json = true
+log_level = "info,rbuilder=debug"
+telemetry_port = 6060
+telemetry_ip = "0.0.0.0"
+
+chain = "mainnet"
+reth_datadir = "/Users/vladimirtrifonov/src/rnd/taiko/reth/data/reth/execution-data"
+
+relay_secret_key = "16f3bec1b7f4f1b87c5e1930f944a6dda76ad211a89bc98e8c8e88b5069f8a04"
+coinbase_secret_key = "0dce41fa73ae9f6bdfd51df4d422d75eee174553dba5fd450c4437e4ed3fc903"
+
+#cl_node_url can be a single value, array of values, or passed by an environment variables with values separated with a comma
+#cl_node_url = "http://localhost:3500"
+cl_node_url = ["http://127.0.0.1:33001"]
+jsonrpc_server_port = 8645
+jsonrpc_server_ip = "127.0.0.1"
+el_node_ipc_path = "/tmp/reth.ipc"
+extra_data = "⚡🤖"
+
+dry_run = false
+dry_run_validation_url = "http://localhost:8545"
+
+ignore_cancellable_orders = true
+
+sbundle_mergeabe_signers = []
+# slot_delta_to_start_submits_ms is usually negative since we start bidding BEFORE the slot start
+#slot_delta_to_start_submits_ms = -5000
+
+[[relays]]
+name = "helix"
+url = "http://0xa9e9cff900de07e295a044789fd4bdb6785eb0651ad282f9e76d12afd87e75180bdd64caf2e315b815d7322bd31ab48a@127.0.0.1:4040"
+priority = 0
+use_ssz_for_submit = false
+use_gzip_for_submit = false
+
