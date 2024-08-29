@@ -223,6 +223,8 @@ pub enum RelayError {
     ConnectionError,
     #[error("Internal Error")]
     InternalError,
+    #[error("No Content")]
+    NoContent,
 }
 
 #[derive(Error, Debug, Clone, Serialize, Deserialize)]
@@ -264,7 +266,7 @@ pub type Transaction = Vec<u8>;
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
 pub struct PreconfRequest {
     pub slot: u64,
-    pub preconfs: Vec<Vec<Preconf>>,
+    pub constraints: Vec<Vec<Preconf>>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
@@ -436,9 +438,17 @@ impl RelayClient {
             url
         };
         let resp = reqwest::get(url).await?;
-        let content = resp.bytes().await?;
-        info!("Preconf list: {:?}", content);
-        Ok(serde_json::from_slice(&content).expect("serde"))
+
+        match resp.status() {
+            StatusCode::NOT_FOUND => Err(RelayError::NoContent),
+            StatusCode::OK => {
+                let content = resp.bytes().await?;
+                info!("Preconf list: {:?}", content);
+                let preconf_request: PreconfRequest = serde_json::from_slice(&content).expect("serde");
+                Ok(preconf_request)
+            }
+            status_code => Err(RelayError::UnknownRelayError(status_code, "Unexpected status code".to_string())),
+        }
     }
 
     pub async fn validator_registration(
