@@ -230,7 +230,11 @@ where
             let mut preconf_list = Vec::new();
             for relay in self.relays.iter() {
                 match relay.client.get_preconf_list(payload.slot()).await {
-                    Ok(l) => preconf_list.extend(l),
+                    Ok(l) => {
+                      if let Some(preconfs) = l.preconfs.get(0) {
+                        preconf_list.extend(preconfs.clone());
+                      }
+                    },
                     Err(e) => {
                         warn!(
                             slot = payload.slot(),
