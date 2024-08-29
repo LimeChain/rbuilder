@@ -3,7 +3,7 @@ use crate::{
         builders::{dummy_order::DummyOrderFactory, LiveBuilderInput},
         BlockBuildingContext, BlockState, BuiltBlockTrace, PartialBlock,
     },
-    mev_boost::PreconfRequest,
+    mev_boost::Preconf,
     primitives::OrderId,
     telemetry,
     utils::{is_provider_factory_health_error, Signer},
@@ -12,7 +12,7 @@ use ahash::{HashMap, HashSet};
 use alloy_primitives::{utils::format_ether, Address};
 use reth::providers::{BlockNumReader, ProviderFactory};
 use reth_db::database::Database;
-use reth_primitives::{Transaction, TransactionSigned, TransactionSignedEcRecovered};
+use reth_primitives::{TransactionSigned, TransactionSignedEcRecovered};
 use reth_provider::StateProvider;
 use serde::Deserialize;
 
@@ -124,24 +124,19 @@ impl<DB: Database + Clone + 'static> PreconfBuilderContext<DB> {
             .account_balance(ctx.attributes.suggested_fee_recipient)?
             .unwrap_or_default();
 
-        let mut preconf_requests = ctx.preconf_list.clone();
+        let preconf_requests = ctx.preconf_list.clone();
         if preconf_requests.is_empty() {
             info!("No preconf requests, skipping block");
             return Ok(None);
         }
-        preconf_requests.sort_by_key(|p| p.preconf_conditions.ordering_meta_data.index);
-        let preconf_max_index = preconf_requests
-            .last()
-            .unwrap()
-            .preconf_conditions
-            .ordering_meta_data
-            .index;
+        let preconf_max_index = preconf_requests.len();
         let preconf_index_map =
             preconf_requests
                 .iter()
-                .fold(HashMap::default(), |mut map, preconf| {
+                .enumerate()
+                .fold(HashMap::default(), |mut map, (index, preconf)| {
                     map.insert(
-                        preconf.preconf_conditions.ordering_meta_data.index,
+                        index,
                         preconf.clone(),
                     );
                     map
@@ -383,9 +378,6 @@ fn run_preconf_builder<DB: Database + Clone + 'static, SinkType: BlockBuildingSi
     }
 }
 
-fn generate_tx_from_preconf(preconf: &PreconfRequest) -> Option<TransactionSigned> {
-    preconf
-        .preconf_tx
-        .as_ref()
-        .map(|tx| serde_json::from_slice(tx).expect("tx deserde"))
+fn generate_tx_from_preconf(preconf: &Preconf) -> Option<TransactionSigned> {
+    serde_json::from_slice(preconf.tx.as_slice()).expect("tx deserde")
 }

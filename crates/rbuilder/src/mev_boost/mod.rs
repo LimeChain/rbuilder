@@ -12,7 +12,6 @@ use reqwest::{
     header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_ENCODING, CONTENT_TYPE},
     Body, Response, StatusCode,
 };
-use reth::rpc::types::beacon::BlsSignature;
 use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, DisplayFromStr};
 use ssz::Encode;
@@ -260,26 +259,17 @@ pub struct ValidatorSlotData {
     pub entry: ValidatorRegistration,
 }
 
-type Transaction = Vec<u8>;
+pub type Transaction = Vec<u8>;
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
 pub struct PreconfRequest {
-    pub tip_tx: TipTransaction,
-    pub preconf_conditions: PreconfCondition,
-    pub init_signature: BlsSignature,
-    tip_tx_signature: Bytes,
-    pub preconfer_signature: Bytes,
-    pub preconf_tx: Option<Transaction>,
+    pub slot: u64,
+    pub preconfs: Vec<Vec<Preconf>>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
-pub struct TipTransaction {
-    pub gas_limit: U256,
-    pub from: Address,
-    pub to: Address,
-    pub pre_pay: U256,
-    pub after_pay: U256,
-    pub nonce: U256,
+pub struct Preconf {
+    pub tx: Transaction,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
@@ -439,10 +429,10 @@ impl RelayClient {
             .await
     }
 
-    pub async fn get_preconf_list(&self, slot: u64) -> Result<Vec<PreconfRequest>, RelayError> {
+    pub async fn get_preconf_list(&self, slot: u64) -> Result<PreconfRequest, RelayError> {
         let url = {
             let mut url = self.url.clone();
-            url.set_path(&format!("/relay/v1/data/preconf/preconf_request/{slot}"));
+            url.set_path(&format!("/constraints/v1/constraint/{slot}"));
             url
         };
         let resp = reqwest::get(url).await?;
