@@ -19,6 +19,7 @@ use std::{io::Write, str::FromStr};
 use thiserror::Error;
 use tracing::info;
 use url::Url;
+use ssz_rs::serde::as_hex;
 
 pub use sign_payload::*;
 
@@ -271,6 +272,7 @@ pub struct PreconfRequest {
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
 pub struct Preconf {
+    #[serde(with = "as_hex")]
     pub tx: Transaction,
 }
 
@@ -440,7 +442,7 @@ impl RelayClient {
         let resp = reqwest::get(url).await?;
 
         match resp.status() {
-            StatusCode::NOT_FOUND => Err(RelayError::NoContent),
+            StatusCode::NO_CONTENT => Err(RelayError::NoContent),
             StatusCode::OK => {
                 let content = resp.bytes().await?;
                 info!("Preconf list: {:?}", content);
