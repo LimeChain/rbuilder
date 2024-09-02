@@ -3,7 +3,7 @@ log_level = "info,rbuilder=debug"
 telemetry_port = 6060
 telemetry_ip = "0.0.0.0"
 
-chain = "mainnet"
+chain = "../reth/network-configs/genesis.json"
 reth_datadir = "../reth/data/reth/execution-data"
 
 relay_secret_key = "16f3bec1b7f4f1b87c5e1930f944a6dda76ad211a89bc98e8c8e88b5069f8a04"
