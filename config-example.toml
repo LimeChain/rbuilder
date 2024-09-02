@@ -25,6 +25,7 @@ ignore_cancellable_orders = true
 sbundle_mergeabe_signers = []
 # slot_delta_to_start_submits_ms is usually negative since we start bidding BEFORE the slot start
 #slot_delta_to_start_submits_ms = -5000
+live_builders = ["preconf"]
 
 [[relays]]
 name = "helix"
@@ -32,4 +33,11 @@ url = "http://0xa9e9cff900de07e295a044789fd4bdb6785eb0651ad282f9e76d12afd87e7518
 priority = 0
 use_ssz_for_submit = false
 use_gzip_for_submit = false
+
+[[builders]]
+name = "preconf"
+algo = "preconf-builder"
+coinbase_payment= true
+dummy_tx_private_key = "0x39725efee3fb28614de3bacaffe4cc4bd8c436257e2c8bb887c4b5c4be45e76d"
+send_value = 1000
 
