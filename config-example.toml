@@ -4,7 +4,7 @@ telemetry_port = 6060
 telemetry_ip = "0.0.0.0"
 
 chain = "mainnet"
-reth_datadir = "/Users/vladimirtrifonov/src/rnd/taiko/reth/data/reth/execution-data"
+reth_datadir = "../reth/execution-data"
 
 relay_secret_key = "16f3bec1b7f4f1b87c5e1930f944a6dda76ad211a89bc98e8c8e88b5069f8a04"
 coinbase_secret_key = "0dce41fa73ae9f6bdfd51df4d422d75eee174553dba5fd450c4437e4ed3fc903"
@@ -37,7 +37,7 @@ use_gzip_for_submit = false
 [[builders]]
 name = "preconf"
 algo = "preconf-builder"
-coinbase_payment= true
+coinbase_payment = true
 dummy_tx_private_key = "0x39725efee3fb28614de3bacaffe4cc4bd8c436257e2c8bb887c4b5c4be45e76d"
 send_value = 1000
 
