@@ -379,5 +379,13 @@ fn run_preconf_builder<DB: Database + Clone + 'static, SinkType: BlockBuildingSi
 }
 
 fn generate_tx_from_preconf(preconf: &Preconf) -> Option<TransactionSigned> {
-    serde_json::from_slice(preconf.tx.as_slice()).expect("tx deserde")
+    let mut tx_slice: &[u8] = &preconf.tx;
+
+    match TransactionSigned::decode_enveloped(&mut tx_slice) {
+        Ok(tx) => Some(tx),
+        Err(err) => {
+            error!("Failed to decode preconf tx error: {:?}", err);
+            None
+        },
+    }
 }
