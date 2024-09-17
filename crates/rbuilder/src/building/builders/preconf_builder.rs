@@ -163,7 +163,7 @@ impl<DB: Database + Clone + 'static> PreconfBuilderContext<DB> {
                 ctx.block_env.coinbase,
                 self.config.send_value,
             );
-            let max_transaction = max(preconf_max_index, 10);
+            let max_transaction = max(preconf_max_index, 1);
 
             // @Perf when gas left is too low we should break.
             for index in 0..max_transaction {
