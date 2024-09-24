@@ -1103,14 +1103,13 @@ pub fn coinbase_profit(
     coinbase_balance_before: U256,
     coinbase_balance_after: U256,
 ) -> Result<U256, OrderErr> {
-    // TODO: uncomment this when we have a way to handle negative profits
-    // if coinbase_balance_after >= coinbase_balance_before {
+    if coinbase_balance_after >= coinbase_balance_before {
         Ok(coinbase_balance_after - coinbase_balance_before)
-    // } else {
-    //     Err(OrderErr::NegativeProfit(
-    //         coinbase_balance_before - coinbase_balance_after,
-    //     ))
-    // }
+    } else {
+        Err(OrderErr::NegativeProfit(
+            coinbase_balance_before - coinbase_balance_after,
+        ))
+    }
 }
 
 fn update_nonce_list(nonces_updated: &mut Vec<(Address, u64)>, new_update: (Address, u64)) {

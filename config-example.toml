@@ -37,7 +37,7 @@ use_gzip_for_submit = false
 [[builders]]
 name = "preconf"
 algo = "preconf-builder"
-coinbase_payment = false
+coinbase_payment = true
 dummy_tx_private_key = "7ff1a4c1d57e5e784d327c4c7651e952350bc271f156afb3d00d20f5ef924856"
-send_value = 10000
+send_value = 1000
 
