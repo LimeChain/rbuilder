@@ -163,7 +163,7 @@ impl<DB: Database + Clone + 'static> PreconfBuilderContext<DB> {
                 ctx.block_env.coinbase,
                 self.config.send_value,
             );
-            let max_transaction = max(preconf_max_index, 10);
+            let max_transaction = max(preconf_max_index, 1);
 
             // @Perf when gas left is too low we should break.
             for index in 0..max_transaction {
@@ -379,5 +379,13 @@ fn run_preconf_builder<DB: Database + Clone + 'static, SinkType: BlockBuildingSi
 }
 
 fn generate_tx_from_preconf(preconf: &Preconf) -> Option<TransactionSigned> {
-    serde_json::from_slice(preconf.tx.as_slice()).expect("tx deserde")
+    let mut tx_slice: &[u8] = &preconf.tx;
+
+    match TransactionSigned::decode_enveloped(&mut tx_slice) {
+        Ok(tx) => Some(tx),
+        Err(err) => {
+            error!("Failed to decode preconf tx error: {:?}", err);
+            None
+        },
+    }
 }
