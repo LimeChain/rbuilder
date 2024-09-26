@@ -4,9 +4,9 @@ telemetry_port = 6060
 telemetry_ip = "0.0.0.0"
 
 chain = "../reth/network-configs/genesis.json"
-reth_datadir = "../reth/data/reth/execution-data"
+reth_datadir = "../data/reth/execution-data"
 
-relay_secret_key = "16f3bec1b7f4f1b87c5e1930f944a6dda76ad211a89bc98e8c8e88b5069f8a04"
+relay_secret_key = "215768a626159445ba0d8a1afab729c5724e75aa020a480580cbf86dd2ae4d47"
 coinbase_secret_key = "0dce41fa73ae9f6bdfd51df4d422d75eee174553dba5fd450c4437e4ed3fc903"
 
 #cl_node_url can be a single value, array of values, or passed by an environment variables with values separated with a comma
@@ -24,12 +24,12 @@ ignore_cancellable_orders = true
 
 sbundle_mergeabe_signers = []
 # slot_delta_to_start_submits_ms is usually negative since we start bidding BEFORE the slot start
-#slot_delta_to_start_submits_ms = -5000
+# slot_delta_to_start_submits_ms = -5000
 live_builders = ["preconf"]
 
 [[relays]]
 name = "helix"
-url = "http://0xa9e9cff900de07e295a044789fd4bdb6785eb0651ad282f9e76d12afd87e75180bdd64caf2e315b815d7322bd31ab48a@127.0.0.1:4040"
+url = "http://0x996323af7e545fb6363ace53f1538c7ddc3eb0d985b2479da3ee4ace10cbc393b518bf02d1a2ddb2f5bdf09b473933ea@127.0.0.1:4040"
 priority = 0
 use_ssz_for_submit = false
 use_gzip_for_submit = false
@@ -38,6 +38,6 @@ use_gzip_for_submit = false
 name = "preconf"
 algo = "preconf-builder"
 coinbase_payment = true
-dummy_tx_private_key = "0x39725efee3fb28614de3bacaffe4cc4bd8c436257e2c8bb887c4b5c4be45e76d"
+dummy_tx_private_key = "7ff1a4c1d57e5e784d327c4c7651e952350bc271f156afb3d00d20f5ef924856"
 send_value = 1000
 
