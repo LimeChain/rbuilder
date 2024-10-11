@@ -227,14 +227,19 @@ where
             );
 
             inc_active_slots();
+
+            info!("sleep start");
+            tokio::time::sleep(Duration::from_millis(3500)).await;
+            info!("sleep end");
+
             let mut preconf_list = Vec::new();
             for relay in self.relays.iter() {
                 match relay.client.get_preconf_list(payload.slot()).await {
                     Ok(l) => {
-                      if let Some(preconfs) = l.constraints.get(0) {
-                        preconf_list.extend(preconfs.clone());
-                      }
-                    },
+                        if let Some(preconfs) = l.constraints.get(0) {
+                            preconf_list.extend(preconfs.clone());
+                        }
+                    }
                     Err(e) => {
                         warn!(
                             slot = payload.slot(),
